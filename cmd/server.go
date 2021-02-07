@@ -23,8 +23,12 @@ var cmdServer = &cobra.Command{
 	Run:   runServer,
 }
 
+var port int
+var password string
+var numBots int
+
 func init() {
-	cmdServer.Flags().IntVar(&port, "port", 8888, "The port to listen on.")
+	cmdServer.Flags().IntVar(&port, "port", defaultPort, "The port to listen on.")
 	cmdServer.Flags().StringVar(&password, "password", "", "The server password.")
 	cmdServer.Flags().IntVar(&numBots, "bots", 0, "The number of bots to add to the server.")
 

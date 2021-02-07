@@ -15,12 +15,8 @@ var rootCmd = &cobra.Command{
 	},
 }
 
-const version string = "1.0.0"
-
-var address string
-var port int
-var password string
-var numBots int
+const version = "1.0.0"
+const defaultPort = 8888
 
 func init() {
 	// set --version flag

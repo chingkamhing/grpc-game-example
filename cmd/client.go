@@ -3,6 +3,7 @@ package cmd
 // Connects to a server for play.
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"regexp"
@@ -102,7 +103,7 @@ func connectApp(info *connectInfo) *tview.Application {
 		}
 		return result
 	}, nil).
-		AddInputField("Server address", ":8888", 32, nil, nil).
+		AddInputField("Server address", fmt.Sprintf(":%d", defaultPort), 32, nil, nil).
 		AddPasswordField("Server password", "", 32, '*', nil).
 		AddButton("Connect", func() {
 			info.PlayerName = form.GetFormItem(0).(*tview.InputField).GetText()

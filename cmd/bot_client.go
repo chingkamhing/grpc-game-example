@@ -4,6 +4,7 @@ package cmd
 // The server has no awareness that a bot is controlling the player.
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/spf13/cobra"
@@ -22,8 +23,10 @@ var cmdBot = &cobra.Command{
 	Run:   runBot,
 }
 
+var address string
+
 func init() {
-	cmdBot.Flags().StringVar(&address, "address", ":8888", "The server address.")
+	cmdBot.Flags().StringVar(&address, "address", fmt.Sprintf(":%d", defaultPort), "The server address.")
 
 	rootCmd.AddCommand(cmdBot)
 }

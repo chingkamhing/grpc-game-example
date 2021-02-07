@@ -22,8 +22,10 @@ var cmdLocal = &cobra.Command{
 	Run:   runLocal,
 }
 
+var clientBots int
+
 func init() {
-	cmdLocal.Flags().IntVar(&numBots, "bots", 1, "The number of bots to play against.")
+	cmdLocal.Flags().IntVar(&clientBots, "bots", 1, "The number of bots to play against.")
 
 	rootCmd.AddCommand(cmdLocal)
 }
@@ -46,7 +48,7 @@ func runLocal(cmd *cobra.Command, args []string) {
 	view.CurrentPlayer = currentPlayer.ID()
 
 	bots := bot.NewBots(game)
-	for i := 0; i < numBots; i++ {
+	for i := 0; i < clientBots; i++ {
 		bots.AddBot(fmt.Sprintf("Bob %d", i))
 	}
 
