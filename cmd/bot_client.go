@@ -1,30 +1,40 @@
-package main
+package cmd
 
 // Connects a local bot to a remote server, which is a neat demo.
 // The server has no awareness that a bot is controlling the player.
 
 import (
-	"flag"
 	"log"
 
-	"github.com/mortenson/grpc-game-example/pkg/backend"
-	"github.com/mortenson/grpc-game-example/pkg/bot"
-	"github.com/mortenson/grpc-game-example/pkg/client"
-	"github.com/mortenson/grpc-game-example/pkg/frontend"
-	"github.com/mortenson/grpc-game-example/proto"
+	"github.com/spf13/cobra"
+
+	"github.com/chingkamhing/grpc-game-example/pkg/backend"
+	"github.com/chingkamhing/grpc-game-example/pkg/bot"
+	"github.com/chingkamhing/grpc-game-example/pkg/client"
+	"github.com/chingkamhing/grpc-game-example/pkg/frontend"
+	"github.com/chingkamhing/grpc-game-example/proto"
 	"google.golang.org/grpc"
 )
 
-func main() {
-	address := flag.String("address", ":8888", "The server address.")
-	flag.Parse()
+var cmdBot = &cobra.Command{
+	Use:   "bot",
+	Short: "T Shooter game (bot client)",
+	Run:   runBot,
+}
 
+func init() {
+	cmdBot.Flags().StringVar(&address, "address", ":8888", "The server address.")
+
+	rootCmd.AddCommand(cmdBot)
+}
+
+func runBot(cmd *cobra.Command, args []string) {
 	game := backend.NewGame()
 	game.IsAuthoritative = false
 	view := frontend.NewView(game)
 	game.Start()
 
-	conn, err := grpc.Dial(*address, grpc.WithInsecure())
+	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("can not connect with server %v", err)
 	}

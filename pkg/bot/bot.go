@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/beefsack/go-astar"
+	"github.com/chingkamhing/grpc-game-example/pkg/backend"
 	"github.com/google/uuid"
-	"github.com/mortenson/grpc-game-example/pkg/backend"
 )
 
 // bot controls a player in the game.

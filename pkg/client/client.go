@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/chingkamhing/grpc-game-example/pkg/backend"
+	"github.com/chingkamhing/grpc-game-example/pkg/frontend"
+	"github.com/chingkamhing/grpc-game-example/proto"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/google/uuid"
-	"github.com/mortenson/grpc-game-example/pkg/backend"
-	"github.com/mortenson/grpc-game-example/pkg/frontend"
-	"github.com/mortenson/grpc-game-example/proto"
 	"google.golang.org/grpc/metadata"
 )
 

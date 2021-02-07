@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/chingkamhing/grpc-game-example/pkg/backend"
 	"github.com/gdamore/tcell"
 	"github.com/google/uuid"
-	"github.com/mortenson/grpc-game-example/pkg/backend"
 	"github.com/rivo/tview"
 )
 

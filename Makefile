@@ -1,21 +1,15 @@
-.PHONY: build run run-client run-client-local run-server proto fmt release
+.PHONY: build all release run run-client run-client-local run-server proto fmt clean
+
 build:
+	# native build
+	go build -o tshooter *.go
+all:
 	# Linux
-	for command in client_local client server; do \
-		GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o "bin/tshooter_linux_$${command}" "cmd/$${command}.go"; \
-		GOOS=linux GOARCH=amd64 go build -ldflags "-s -w -X main.Command=$${command}" -o "bin/tshooter_linux_launcher_$${command}" cmd/launcher.go; \
-	done
+	GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o tshooter_linux *.go
 	# Mac
-	for command in client_local client server; do \
-		GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w" -o "bin/tshooter_darwin_$${command}" "cmd/$${command}.go"; \
-		GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w -X main.Command=$${command}" -o "bin/tshooter_darwin_launcher_$${command}" cmd/launcher.go; \
-	done
-	# @todo package .app and .dmg
+	GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w" -o tshooter_darwin *.go
 	# Windows
-	for command in client_local client server; do \
-		GOOS=windows GOARCH=amd64 go build -ldflags "-s -w" -o "bin/tshooter_windows_$${command}.exe" "cmd/$${command}.go"; \
-		GOOS=windows GOARCH=amd64 go build -ldflags "-s -w -X main.Command=$${command}.exe" -o "bin/tshooter_windows_launcher_$${command}.exe" cmd/launcher.go; \
-	done
+	GOOS=windows GOARCH=amd64 go build -ldflags "-s -w" -o tshooter_windows.exe *.go
 release:
 	cp assets/README.txt bin/
 	cd bin && \
@@ -35,3 +29,5 @@ proto:
 	protoc --go_out=plugins=grpc:. proto/*.proto
 fmt:
 	gofmt -s -w cmd/*.go proto/*.go pkg/*/*.go
+clean:
+	rm -f 

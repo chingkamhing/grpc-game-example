@@ -1,6 +1,6 @@
-module github.com/mortenson/grpc-game-example
+module github.com/chingkamhing/grpc-game-example
 
-go 1.14
+go 1.15
 
 require (
 	github.com/andrew-d/go-termutil v0.0.0-20150726205930-009166a695a2
@@ -9,5 +9,6 @@ require (
 	github.com/golang/protobuf v1.3.5
 	github.com/google/uuid v1.1.1
 	github.com/rivo/tview v0.0.0-20200329194346-7cc182c5846e
+	github.com/spf13/cobra v1.1.1
 	google.golang.org/grpc v1.28.0
 )

@@ -1,29 +1,39 @@
-package main
+package cmd
 
 // Runs a game server.
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"net"
 
-	"github.com/mortenson/grpc-game-example/pkg/backend"
-	"github.com/mortenson/grpc-game-example/pkg/bot"
-	"github.com/mortenson/grpc-game-example/pkg/server"
-	"github.com/mortenson/grpc-game-example/proto"
+	"github.com/spf13/cobra"
+
+	"github.com/chingkamhing/grpc-game-example/pkg/backend"
+	"github.com/chingkamhing/grpc-game-example/pkg/bot"
+	"github.com/chingkamhing/grpc-game-example/pkg/server"
+	"github.com/chingkamhing/grpc-game-example/proto"
 
 	"google.golang.org/grpc"
 )
 
-func main() {
-	port := flag.Int("port", 8888, "The port to listen on.")
-	password := flag.String("password", "", "The server password.")
-	numBots := flag.Int("bots", 0, "The number of bots to add to the server.")
-	flag.Parse()
+var cmdServer = &cobra.Command{
+	Use:   "server",
+	Short: "T Shooter game (server)",
+	Run:   runServer,
+}
 
-	log.Printf("listening on port %d", *port)
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
+func init() {
+	cmdServer.Flags().IntVar(&port, "port", 8888, "The port to listen on.")
+	cmdServer.Flags().StringVar(&password, "password", "", "The server password.")
+	cmdServer.Flags().IntVar(&numBots, "bots", 0, "The number of bots to add to the server.")
+
+	rootCmd.AddCommand(cmdServer)
+}
+
+func runServer(cmd *cobra.Command, args []string) {
+	log.Printf("listening on port %d", port)
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
@@ -31,7 +41,7 @@ func main() {
 	game := backend.NewGame()
 
 	bots := bot.NewBots(game)
-	for i := 0; i < *numBots; i++ {
+	for i := 0; i < numBots; i++ {
 		bots.AddBot(fmt.Sprintf("Bob %d", i))
 	}
 
@@ -39,7 +49,7 @@ func main() {
 	bots.Start()
 
 	s := grpc.NewServer()
-	server := server.NewGameServer(game, *password)
+	server := server.NewGameServer(game, password)
 	proto.RegisterGameServer(s, server)
 
 	if err := s.Serve(lis); err != nil {

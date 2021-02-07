@@ -4,9 +4,9 @@ import (
 	"log"
 	"unicode/utf8"
 
+	"github.com/chingkamhing/grpc-game-example/pkg/backend"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/google/uuid"
-	"github.com/mortenson/grpc-game-example/pkg/backend"
 )
 
 func GetBackendDirection(protoDirection Direction) backend.Direction {

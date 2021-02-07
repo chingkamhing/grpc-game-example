@@ -1,4 +1,4 @@
-package main
+package cmd
 
 // Connects to a server for play.
 
@@ -7,13 +7,15 @@ import (
 	"os"
 	"regexp"
 
+	"github.com/spf13/cobra"
+
 	termutil "github.com/andrew-d/go-termutil"
+	"github.com/chingkamhing/grpc-game-example/pkg/backend"
+	"github.com/chingkamhing/grpc-game-example/pkg/client"
+	"github.com/chingkamhing/grpc-game-example/pkg/frontend"
+	"github.com/chingkamhing/grpc-game-example/proto"
 	"github.com/gdamore/tcell"
 	"github.com/google/uuid"
-	"github.com/mortenson/grpc-game-example/pkg/backend"
-	"github.com/mortenson/grpc-game-example/pkg/client"
-	"github.com/mortenson/grpc-game-example/pkg/frontend"
-	"github.com/mortenson/grpc-game-example/proto"
 	"github.com/rivo/tview"
 	"google.golang.org/grpc"
 )
@@ -28,6 +30,53 @@ type connectInfo struct {
 	PlayerName string
 	Address    string
 	Password   string
+}
+
+var cmdClient = &cobra.Command{
+	Use:   "client",
+	Short: "T Shooter game (client)",
+	Run:   runClient,
+}
+
+func init() {
+	rootCmd.AddCommand(cmdClient)
+}
+
+func runClient(cmd *cobra.Command, args []string) {
+	if !termutil.Isatty(os.Stdin.Fd()) {
+		panic("this program must be run in a terminal")
+	}
+
+	game := backend.NewGame()
+	game.IsAuthoritative = false
+	view := frontend.NewView(game)
+	game.Start()
+
+	info := connectInfo{}
+	connectApp := connectApp(&info)
+	connectApp.Run()
+
+	conn, err := grpc.Dial(info.Address, grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("can not connect with server %v", err)
+	}
+
+	grpcClient := proto.NewGameClient(conn)
+	client := client.NewGameClient(game, view)
+
+	playerID := uuid.New()
+	err = client.Connect(grpcClient, playerID, info.PlayerName, info.Password)
+	if err != nil {
+		log.Fatalf("connect request failed %v", err)
+	}
+	client.Start()
+
+	view.Start()
+
+	err = <-view.Done
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // It feels wrong to have this much frontend code in a command file, but this
@@ -76,41 +125,4 @@ func connectApp(info *connectInfo) *tview.Application {
 	flex.AddItem(form, 0, 1, false)
 	app.SetRoot(flex, true).SetFocus(form)
 	return app
-}
-
-func main() {
-	if !termutil.Isatty(os.Stdin.Fd()) {
-		panic("this program must be run in a terminal")
-	}
-
-	game := backend.NewGame()
-	game.IsAuthoritative = false
-	view := frontend.NewView(game)
-	game.Start()
-
-	info := connectInfo{}
-	connectApp := connectApp(&info)
-	connectApp.Run()
-
-	conn, err := grpc.Dial(info.Address, grpc.WithInsecure())
-	if err != nil {
-		log.Fatalf("can not connect with server %v", err)
-	}
-
-	grpcClient := proto.NewGameClient(conn)
-	client := client.NewGameClient(game, view)
-
-	playerID := uuid.New()
-	err = client.Connect(grpcClient, playerID, info.PlayerName, info.Password)
-	if err != nil {
-		log.Fatalf("connect request failed %v", err)
-	}
-	client.Start()
-
-	view.Start()
-
-	err = <-view.Done
-	if err != nil {
-		log.Fatal(err)
-	}
 }

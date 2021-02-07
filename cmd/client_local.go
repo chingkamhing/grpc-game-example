@@ -1,28 +1,37 @@
-package main
+package cmd
 
 // Starts a local instance of the game with bots.
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"os"
 
 	termutil "github.com/andrew-d/go-termutil"
 	"github.com/google/uuid"
+	"github.com/spf13/cobra"
 
-	"github.com/mortenson/grpc-game-example/pkg/backend"
-	"github.com/mortenson/grpc-game-example/pkg/bot"
-	"github.com/mortenson/grpc-game-example/pkg/frontend"
+	"github.com/chingkamhing/grpc-game-example/pkg/backend"
+	"github.com/chingkamhing/grpc-game-example/pkg/bot"
+	"github.com/chingkamhing/grpc-game-example/pkg/frontend"
 )
 
-func main() {
+var cmdLocal = &cobra.Command{
+	Use:   "local",
+	Short: "T Shooter game (local)",
+	Run:   runLocal,
+}
+
+func init() {
+	cmdLocal.Flags().IntVar(&numBots, "bots", 1, "The number of bots to play against.")
+
+	rootCmd.AddCommand(cmdLocal)
+}
+
+func runLocal(cmd *cobra.Command, args []string) {
 	if !termutil.Isatty(os.Stdin.Fd()) {
 		panic("this program must be run in a terminal")
 	}
-
-	numBots := flag.Int("bots", 1, "The number of bots to play against.")
-	flag.Parse()
 
 	currentPlayer := backend.Player{
 		Name:            "Alice",
@@ -37,7 +46,7 @@ func main() {
 	view.CurrentPlayer = currentPlayer.ID()
 
 	bots := bot.NewBots(game)
-	for i := 0; i < *numBots; i++ {
+	for i := 0; i < numBots; i++ {
 		bots.AddBot(fmt.Sprintf("Bob %d", i))
 	}
 

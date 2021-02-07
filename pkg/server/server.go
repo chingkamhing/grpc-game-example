@@ -15,8 +15,8 @@ import (
 	"github.com/google/uuid"
 	"google.golang.org/grpc/metadata"
 
-	"github.com/mortenson/grpc-game-example/pkg/backend"
-	"github.com/mortenson/grpc-game-example/proto"
+	"github.com/chingkamhing/grpc-game-example/pkg/backend"
+	"github.com/chingkamhing/grpc-game-example/proto"
 )
 
 const (
