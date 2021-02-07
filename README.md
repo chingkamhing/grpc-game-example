@@ -22,37 +22,22 @@ Here's a quick reference for common operations on the project:
 
 ```bash
 # Download go module dependencies
-go mod download
+go get ./...
 # Build binaries
 make build
-# Run a local, offline game
-make run
-# Run a server with defaults
-make run-server
-# Run a client
-make run-client
-# Run a bot as a client
-make run-bot-client
 # Rebuild protobuf
 make proto
 # Run gofmt
 make fmt
 ```
 
-If you run the commands or binaries directly more command line options are
-available:
+If you run the commands or binaries directly more command line options are available:
 
 ```bash
 # Run a server
-go run cmd/server.go -port=9999 -bots=2 -password=foo
+./tshooter server -port=9999 -bots=2 -password=foo
 # Run a local, offline game
-go run cmd/client_local.go -bots=2
+./tshooter local -bots=2
 # Run a bot as a client
-go run cmd/bot_client.go -address=":9999"
+./tshooter bot -address=":9999"
 ```
-
-# Using binaries
-
-Using `make`, binaries are output to the `bin` directory in the format
-`tshooter_ARCH_COMMAND`. For ease of use, "launcher" binaries are also
-generated which can be double clicked to open a terminal window.
