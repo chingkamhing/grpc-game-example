@@ -18,8 +18,8 @@ import (
 )
 
 var cmdBot = &cobra.Command{
-	Use:   "bot",
-	Short: "T Shooter game (bot client)",
+	Use:   "client-bot",
+	Short: "T Shooter game (client bot player)",
 	Run:   runBot,
 }
 
