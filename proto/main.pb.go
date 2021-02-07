@@ -7,10 +7,10 @@ import (
 	context "context"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
-	timestamp "github.com/golang/protobuf/ptypes/timestamp"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	math "math"
 )
 
@@ -170,14 +170,14 @@ func (m *Player) GetIcon() string {
 }
 
 type Laser struct {
-	Id                   string               `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Direction            Direction            `protobuf:"varint,2,opt,name=direction,proto3,enum=proto.Direction" json:"direction,omitempty"`
-	StartTime            *timestamp.Timestamp `protobuf:"bytes,3,opt,name=startTime,proto3" json:"startTime,omitempty"`
-	InitialPosition      *Coordinate          `protobuf:"bytes,4,opt,name=initialPosition,proto3" json:"initialPosition,omitempty"`
-	OwnerId              string               `protobuf:"bytes,5,opt,name=ownerId,proto3" json:"ownerId,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
-	XXX_unrecognized     []byte               `json:"-"`
-	XXX_sizecache        int32                `json:"-"`
+	Id                   string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Direction            Direction              `protobuf:"varint,2,opt,name=direction,proto3,enum=proto.Direction" json:"direction,omitempty"`
+	StartTime            *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=startTime,proto3" json:"startTime,omitempty"`
+	InitialPosition      *Coordinate            `protobuf:"bytes,4,opt,name=initialPosition,proto3" json:"initialPosition,omitempty"`
+	OwnerId              string                 `protobuf:"bytes,5,opt,name=ownerId,proto3" json:"ownerId,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}               `json:"-"`
+	XXX_unrecognized     []byte                 `json:"-"`
+	XXX_sizecache        int32                  `json:"-"`
 }
 
 func (m *Laser) Reset()         { *m = Laser{} }
@@ -219,7 +219,7 @@ func (m *Laser) GetDirection() Direction {
 	return Direction_UP
 }
 
-func (m *Laser) GetStartTime() *timestamp.Timestamp {
+func (m *Laser) GetStartTime() *timestamppb.Timestamp {
 	if m != nil {
 		return m.StartTime
 	}
@@ -626,11 +626,11 @@ func (m *PlayerRespawn) GetKilledById() string {
 }
 
 type RoundOver struct {
-	RoundWinnerId        string               `protobuf:"bytes,1,opt,name=roundWinnerId,proto3" json:"roundWinnerId,omitempty"`
-	NewRoundAt           *timestamp.Timestamp `protobuf:"bytes,2,opt,name=newRoundAt,proto3" json:"newRoundAt,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
-	XXX_unrecognized     []byte               `json:"-"`
-	XXX_sizecache        int32                `json:"-"`
+	RoundWinnerId        string                 `protobuf:"bytes,1,opt,name=roundWinnerId,proto3" json:"roundWinnerId,omitempty"`
+	NewRoundAt           *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=newRoundAt,proto3" json:"newRoundAt,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}               `json:"-"`
+	XXX_unrecognized     []byte                 `json:"-"`
+	XXX_sizecache        int32                  `json:"-"`
 }
 
 func (m *RoundOver) Reset()         { *m = RoundOver{} }
@@ -665,7 +665,7 @@ func (m *RoundOver) GetRoundWinnerId() string {
 	return ""
 }
 
-func (m *RoundOver) GetNewRoundAt() *timestamp.Timestamp {
+func (m *RoundOver) GetNewRoundAt() *timestamppb.Timestamp {
 	if m != nil {
 		return m.NewRoundAt
 	}
@@ -950,9 +950,7 @@ func init() {
 	proto.RegisterType((*Response)(nil), "proto.Response")
 }
 
-func init() {
-	proto.RegisterFile("proto/main.proto", fileDescriptor_098391ad7281b52b)
-}
+func init() { proto.RegisterFile("proto/main.proto", fileDescriptor_098391ad7281b52b) }
 
 var fileDescriptor_098391ad7281b52b = []byte{
 	// 768 bytes of a gzipped FileDescriptorProto
